@@ -5,8 +5,7 @@ import Toolbar from "material-ui/Toolbar";
 import Typography from "material-ui/Typography";
 import Paper from "material-ui/Paper";
 import Tabs, {Tab} from "material-ui/Tabs";
-import TextField from "material-ui/TextField/TextField";
-import Button from "material-ui/es/Button/Button";
+import LoginSignUpForm from "components/LoginSignUpForm";
 
 const styles = (theme) => ({
   formWrapper: {
@@ -20,28 +19,25 @@ const styles = (theme) => ({
   tabItem: {
     flex: '1 0'
   },
-  form: {
-    padding: theme.spacing.unit * 3
-  },
-  textField: {
-    marginTop: theme.spacing.unit * 2,
-    marginBottom: theme.spacing.unit * 1
-  },
-  submitButton: {
-    marginTop: theme.spacing.unit * 2
-  }
 });
 
 class WelcomePage extends React.Component {
+
+  state = {};
 
   constructor(props) {
     super(props);
     this.state = {selectedTabIndex: 0};
     this.handleTabItemClick = this.handleTabItemClick.bind(this);
+    this.handleForSubmit = this.handleForSubmit.bind(this);
   }
 
   handleTabItemClick(e, tabIndex) {
     this.setState({selectedTabIndex: tabIndex});
+  }
+
+  handleForSubmit({username, password, repeatedPassword}) {
+    console.log(username, password, repeatedPassword);
   }
 
   render() {
@@ -69,42 +65,10 @@ class WelcomePage extends React.Component {
               </Tabs>
             </AppBar>
 
-
-            <div className={classes.form}>
-              <TextField
-                ref="username"
-                required
-                fullWidth={true}
-                className={classes.textField}
-                label="Username"
-                placeholder="Type your username..."/>
-              <TextField
-                ref="password"
-                required
-                fullWidth={true}
-                type="password"
-                className={classes.textField}
-                label="Password"
-                placeholder="Type your password..."/>
-              {selectedTabIndex === 1 &&
-              <TextField
-                ref="passwordRepeat"
-                required
-                fullWidth={true}
-                type="password"
-                className={classes.textField}
-                label="Repeat password"
-                placeholder="Repeat your password..."/>
-              }
-
-              <Button
-                variant="raised"
-                color="primary"
-                fullWidth
-                className={classes.submitButton}>
-                {selectedTabIndex === 0 ? 'Login' : 'Sign up'}
-              </Button>
-            </div>
+            <LoginSignUpForm
+              isSignUpForm={selectedTabIndex === 1}
+              onSubmit={this.handleForSubmit}
+            />
           </Paper>
         </div>
       </div>
