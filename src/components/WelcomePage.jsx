@@ -5,7 +5,9 @@ import Toolbar from "material-ui/Toolbar";
 import Typography from "material-ui/Typography";
 import Paper from "material-ui/Paper";
 import Tabs, {Tab} from "material-ui/Tabs";
-import LoginSignUpForm from "components/LoginSignUpForm";
+
+import LoginForm from "components/LoginForm";
+import SignUpForm from "components/SignUpForm";
 
 const styles = (theme) => ({
   formWrapper: {
@@ -65,10 +67,7 @@ class WelcomePage extends React.Component {
               </Tabs>
             </AppBar>
 
-            <LoginSignUpForm
-              isSignUpForm={selectedTabIndex === 1}
-              onSubmit={this.handleForSubmit}
-            />
+            {selectedTabIndex === 0 ? <LoginForm/> : <SignUpForm/>}
           </Paper>
         </div>
       </div>
