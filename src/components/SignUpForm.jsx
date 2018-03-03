@@ -23,7 +23,7 @@ class SignUpForm extends React.Component {
   constructor(props) {
     super(props);
     this.handleInputChange = this.handleInputChange.bind(this);
-    this.handleSubmitClick = this.handleSubmitClick.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleInputChange(e) {
@@ -37,10 +37,15 @@ class SignUpForm extends React.Component {
     }));
   }
 
-  handleSubmitClick(e) {
+  handleSubmit(e) {
+    e.preventDefault();
+
     if (!this.validate()) {
       return;
     }
+
+    const {username, password} = this.state;
+    this.props.onSubmit(username.value, password.value);
   }
 
   validate() {
@@ -59,10 +64,11 @@ class SignUpForm extends React.Component {
   render() {
     const {classes} = this.props;
     return (
-      <div className={classes.form}>
+      <form className={classes.form} onSubmit={this.handleSubmit}>
         <TextField
           required
           fullWidth
+          type="text"
           className={classes.topOffset}
           label="Username"
           placeholder="Input your username"
@@ -100,10 +106,10 @@ class SignUpForm extends React.Component {
           variant="raised"
           color="primary"
           fullWidth
+          type="submit"
           className={classes.topOffset}
-          onClick={this.handleSubmitClick}
         >Login</Button>
-      </div>
+      </form>
     )
   }
 }
