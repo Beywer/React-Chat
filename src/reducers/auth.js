@@ -1,8 +1,4 @@
-import {
-  SIGNUP_FAILURE, SIGNUP_REQUEST, SIGNUP_SUCCESS,
-  LOGIN_FAILURE, LOGIN_REQUEST, LOGIN_SUCCESS,
-  LOGOUT_FAILURE, LOGOUT_REQUEST, LOGOUT_SUCCESS
-} from 'constants/index';
+import * as types from 'constants/index';
 
 const token = localStorage.getItem('token');
 
@@ -14,8 +10,8 @@ const initialState = {
 
 export default function auth(state = initialState, action) {
   switch (action.type) {
-    case LOGIN_SUCCESS:
-    case SIGNUP_SUCCESS:
+    case types.LOGIN_SUCCESS:
+    case types.SIGNUP_SUCCESS:
       return {
         ...state,
         isAuthenticated: true,
@@ -23,16 +19,24 @@ export default function auth(state = initialState, action) {
         token: action.payload.token
       };
 
-    case SIGNUP_FAILURE:
-    case LOGIN_FAILURE:
-    case LOGOUT_SUCCESS:
+    case types.RECEIVE_AUTH_SUCCESS:
+      return {
+        ...state,
+        isAuthenticated: true,
+        user: action.payload.user
+      };
+
+    case types.RECEIVE_AUTH_FAILURE:
+    case types.SIGNUP_FAILURE:
+    case types.LOGIN_FAILURE:
+    case types.LOGOUT_SUCCESS:
       return {
         ...state,
         isAuthenticated: false,
         user: null,
         token: ''
       };
-    case LOGOUT_REQUEST:
+    case types.LOGOUT_REQUEST:
       return state;
     default:
       return state;

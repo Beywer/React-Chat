@@ -1,13 +1,9 @@
-import {
-  SIGNUP_FAILURE, SIGNUP_REQUEST, SIGNUP_SUCCESS,
-  LOGIN_FAILURE, LOGIN_REQUEST, LOGIN_SUCCESS,
-  LOGOUT_FAILURE, LOGOUT_REQUEST, LOGOUT_SUCCESS
-} from 'constants/index';
+import * as types from 'constants/index';
 import fetch from "isomorphic-fetch";
 
 export function signup(username, password) {
   return (dispatch) => {
-    dispatch({type: SIGNUP_REQUEST});
+    dispatch({type: types.SIGNUP_REQUEST});
 
     return fetch('http://localhost:8000/v1/signup', {
       method: 'POST',
@@ -22,22 +18,19 @@ export function signup(username, password) {
       }
     })
       .then(resp => resp.json())
-      .then(json => {
-        if (json.success) return json;
-        throw new Error(json.message);
-      })
+      .then(throwOnError)
       .then(json => {
         if (!json.token) throw new Error('Token has not be provided');
         localStorage.setItem('token', json.token);
-        dispatch({type: SIGNUP_SUCCESS, payload: json})
+        dispatch({type: types.SIGNUP_SUCCESS, payload: json})
       })
-      .catch(err => dispatch({type: SIGNUP_FAILURE, payload: err}));
+      .catch(err => dispatch({type: types.SIGNUP_FAILURE, payload: err}));
   }
 }
 
 export function login(username, password) {
   return (dispatch) => {
-    dispatch({type: LOGIN_REQUEST});
+    dispatch({type: types.LOGIN_REQUEST});
 
     return fetch('http://localhost:8000/v1/login', {
       method: 'POST',
@@ -52,21 +45,45 @@ export function login(username, password) {
       }
     })
       .then(resp => resp.json())
-      .then(json => {
-        if (json.success) return json;
-        throw new Error(json.message);
-      })
+      .then(throwOnError)
       .then(json => {
         if (!json.token) throw new Error('Token has not be provided');
         localStorage.setItem('token', json.token);
-        dispatch({type: LOGIN_SUCCESS, payload: json})
+        dispatch({type: types.LOGIN_SUCCESS, payload: json})
       })
-      .catch(err => dispatch({type: LOGIN_FAILURE, payload: err}));
+      .catch(err => dispatch({type: types.LOGIN_FAILURE, payload: err}));
   }
 }
 
 export function logout() {
   return (dispatch) => {
-    dispatch({type: LOGOUT_REQUEST});
+    dispatch({type: types.LOGOUT_REQUEST});
   }
+}
+
+export function receiveAuth() {
+  return function (dispatch, getState) {
+    const {token} = getState().auth;
+
+    if (!token) {
+      dispatch({type: types.RECEIVE_AUTH_FAILURE})
+    }
+
+    return fetch('http://localhost:8000/v1/users/me', {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    })
+      .then(resp => resp.json())
+      .then(throwOnError)
+      .then(json => dispatch({type: types.LOGIN_SUCCESS, payload: json}))
+      .catch(err => dispatch({type: types.LOGIN_FAILURE, payload: err}));
+  }
+}
+
+function throwOnError(jsonResult) {
+  if (jsonResult.success) return jsonResult;
+  throw new Error(jsonResult.message);
 }
