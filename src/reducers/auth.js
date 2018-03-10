@@ -1,4 +1,4 @@
-import * as types from 'constants/index';
+import * as types from 'constants/auth';
 
 const token = localStorage.getItem('token');
 
@@ -42,3 +42,5 @@ export default function auth(state = initialState, action) {
       return state;
   }
 }
+
+export const getCurrentUserId = (state) => state.user && state.user._id;

@@ -6,8 +6,8 @@ import {ListItem, ListItemText} from "material-ui/List";
 
 const styles = (theme) => ({});
 
-const ChatItem = ({classes, title}) => (
-  <ListItem button>
+const ChatItem = ({classes, title, onClick}) => (
+  <ListItem button onClick={onClick}>
     <Avatar colorFrom={title}>{title}</Avatar>
     <ListItemText primary={title}/>
   </ListItem>

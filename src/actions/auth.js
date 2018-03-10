@@ -1,5 +1,6 @@
-import * as types from 'constants/index';
+import * as types from 'constants/auth';
 import fetch from "isomorphic-fetch";
+import {logoutApi} from "utils/api";
 
 export function signup(username, password) {
   return (dispatch) => {
@@ -7,10 +8,6 @@ export function signup(username, password) {
 
     return fetch('http://localhost:8000/v1/signup', {
       method: 'POST',
-      query: {
-        test1: 'asdfasd',
-        test2: 23
-      },
       body: JSON.stringify({username, password}),
       headers: {
         'Content-Type': 'application/json',
@@ -34,10 +31,6 @@ export function login(username, password) {
 
     return fetch('http://localhost:8000/v1/login', {
       method: 'POST',
-      query: {
-        test1: 'asdfasd',
-        test2: 23
-      },
       body: JSON.stringify({username, password}),
       headers: {
         'Content-Type': 'application/json',
@@ -58,6 +51,13 @@ export function login(username, password) {
 export function logout() {
   return (dispatch) => {
     dispatch({type: types.LOGOUT_REQUEST});
+
+    return logoutApi()
+      .then(data => {
+        localStorage.removeItem('token');
+        dispatch({type: types.LOGOUT_SUCCESS, payload: data})
+      })
+      .catch(err => dispatch({type: types.LOGOUT_FAILURE, payload: err}));
   }
 }
 
@@ -78,8 +78,8 @@ export function receiveAuth() {
     })
       .then(resp => resp.json())
       .then(throwOnError)
-      .then(json => dispatch({type: types.LOGIN_SUCCESS, payload: json}))
-      .catch(err => dispatch({type: types.LOGIN_FAILURE, payload: err}));
+      .then(json => dispatch({type: types.RECEIVE_AUTH_SUCCESS, payload: json}))
+      .catch(err => dispatch({type: types.RECEIVE_AUTH_FAILURE, payload: err}));
   }
 }
 

@@ -6,11 +6,12 @@ import ExploreIcon from 'material-ui-icons/Explore';
 
 const styles = (theme) => ({});
 
-const NavigationPanel = () => (
-    <BottomNavigation showLabels>
-        <BottomNavigationAction label="My Chats" icon={<RestoreIcon/>}/>
-        <BottomNavigationAction label="Explore" icon={<ExploreIcon/>}/>
-    </BottomNavigation>
+
+const NavigationPanel = ({onMyChatsSelect, onAllChatsSelect}) => (
+  <BottomNavigation showLabels>
+    <BottomNavigationAction label="My Chats" icon={<RestoreIcon/>} onClick={onMyChatsSelect}/>
+    <BottomNavigationAction label="Explore" icon={<ExploreIcon/>} onClick={onAllChatsSelect}/>
+  </BottomNavigation>
 );
 
 export default withStyles(styles)(NavigationPanel);

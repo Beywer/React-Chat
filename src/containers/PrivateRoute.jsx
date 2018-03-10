@@ -7,13 +7,13 @@ import {receiveAuth} from 'actions/auth';
 class PrivateRoute extends React.Component {
 
   componentDidMount() {
-    // this.props.receiveAuth();
+    this.props.receiveAuth();
   }
 
   render() {
     const {component: Component, isAuthenticated, ...rest} = this.props;
     return (
-      <div>
+      <React.Fragment>
         <Route {...rest} render={props =>
           isAuthenticated ? (
             <Component {...props} />
@@ -25,7 +25,7 @@ class PrivateRoute extends React.Component {
               }}/>
           )
         }/>
-      </div>
+      </React.Fragment>
     );
   }
 }

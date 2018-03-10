@@ -21,7 +21,6 @@ export default function configureStore() {
   }
 
   if (process.env.NODE_ENV !== 'production') {
-    window.gstore = store;
     if (module.hot) {
       module.hot.accept('reducers', () => {
         store.replaceReducer(rootReducer);

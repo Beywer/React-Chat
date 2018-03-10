@@ -1,4 +1,4 @@
-import {REDIRECT} from "constants/index";
+import {REDIRECT} from "constants/services";
 import history from 'utils/history';
 
 export function redirect(to) {
