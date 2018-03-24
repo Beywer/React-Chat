@@ -3,7 +3,7 @@ import withStyles from "material-ui/styles/withStyles";
 import Paper from "material-ui/Paper/Paper";
 import Typography from "material-ui/Typography/Typography";
 import TextField from "material-ui/TextField/TextField";
-import Button from "material-ui/es/Button/Button";
+import Button from "material-ui/Button/Button";
 
 const styles = (theme) => ({
   paper: {
@@ -22,13 +22,27 @@ class UserProfile extends React.Component {
   handleLastNameChange = (e) => this.updateUserProfile('lastName', e.target.value);
   updateUserProfile = (valueName, value) => this.setState({[valueName]: value});
 
+  handleSubmit = (e) => {
+    e.preventDefault();
 
-  handleSaveClick = (e) => {
+    if (!this.validate()) {
+      return;
+    }
+
     const {username, firstName, lastName} = this.state;
     this.props.onSave(username, firstName, lastName);
-    this.handleCloseClick();
+    this.props.onClose();
   };
-  handleCloseClick = (e) => this.props.onClose();
+
+  validate = () => {
+    if (!this.state.username) {
+      this.setState({isUsernameValid: false});
+      return false;
+    }
+
+    this.setState({isUsernameValid: true});
+    return true;
+  };
 
   constructor(props) {
     super(props);
@@ -36,6 +50,7 @@ class UserProfile extends React.Component {
       username: props.username || '',
       firstName: props.firstName || '',
       lastName: props.lastName || '',
+      isUsernameValid: true,
     }
   }
 
@@ -45,47 +60,47 @@ class UserProfile extends React.Component {
 
     return (
       <Paper className={classes.paper}>
-        <Typography variant="title">Edit profile</Typography>
+        <form onSubmit={this.handleSubmit}>
+          <Typography variant="title">Edit profile</Typography>
 
-        <TextField
-          fullWidth
-          required
-          value={username}
-          className={classes.textField}
-          label="Username"
-          placeholder="Enter your username"
-          onChange={this.handleUsernameChange}
-        />
+          <TextField
+            fullWidth
+            required
+            value={username}
+            className={classes.textField}
+            label="Username"
+            placeholder="Enter your username"
+            onChange={this.handleUsernameChange}
+          />
 
-        <TextField
-          fullWidth
-          required
-          value={firstName}
-          className={classes.textField}
-          label="First name"
-          placeholder="Enter your first name"
-          onChange={this.handleFirstNameChange}
-        />
+          <TextField
+            fullWidth
+            value={firstName}
+            className={classes.textField}
+            label="First name"
+            placeholder="Enter your first name"
+            onChange={this.handleFirstNameChange}
+          />
 
-        <TextField
-          fullWidth
-          required
-          value={lastName}
-          className={classes.textField}
-          label="Last name"
-          placeholder="Enter your last name"
-          onChange={this.handleLastNameChange}
-        />
+          <TextField
+            fullWidth
+            value={lastName}
+            className={classes.textField}
+            label="Last name"
+            placeholder="Enter your last name"
+            onChange={this.handleLastNameChange}
+          />
 
-        <Button
-          color="primary"
-          onClick={this.handleSaveClick}
-        >Save</Button>
+          <Button
+            color="primary"
+            type="submit"
+          >Save</Button>
 
-        <Button
-          onClick={this.handleCloseClick}
-        >Close</Button>
+          <Button
+            onClick={this.handleSubmit}
+          >Close</Button>
 
+        </form>
       </Paper>
     );
   }

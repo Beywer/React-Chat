@@ -4,17 +4,25 @@ import grey from 'material-ui/colors/grey';
 
 import Avatar from "components/Avatar";
 import {ListItem, ListItemText} from "material-ui/List";
+import Typography from "material-ui/Typography/Typography";
+import {fromNow} from "utils/date";
 
 const styles = (theme) => ({
   selected: {
     backgroundColor: grey[200]
+  },
+  chatInfo: {
+    padding: `0 ${theme.spacing.unit}px`
   }
 });
 
-const ChatItem = ({classes, title, onClick, selected}) => (
+const ChatItem = ({classes, title, createdAt, onClick, selected}) => (
   <ListItem button onClick={onClick} className={selected ? classes.selected : ''}>
     <Avatar colorFrom={title}>{title}</Avatar>
-    <ListItemText primary={title}/>
+    <div className={classes.chatInfo}>
+      <ListItemText primary={title}/>
+      <Typography variant="caption">{fromNow(createdAt)}</Typography>
+    </div>
   </ListItem>
 );
 

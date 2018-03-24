@@ -33,6 +33,8 @@ class MessageInput extends React.Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
+    if (!this.state.message) return;
+
     this.setState({readOnly: true});
     this.props.onMessageInput(this.state.message)
       .then(() => {

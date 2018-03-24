@@ -85,7 +85,6 @@ export function deleteChat(chatId) {
 
     return deleteChatApi(chatId, token)
       .then(data => {
-        dispatch(redirect('/chat'));
         dispatch(unsetActiveChat());
         dispatch({type: types.DELETE_CHAT_SUCCESS, payload: data});
       })

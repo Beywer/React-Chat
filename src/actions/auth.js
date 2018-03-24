@@ -67,7 +67,11 @@ export function updateUserProfile(username, firstName, lastName) {
       .then(data => {
         dispatch({type: types.UPDATE_USER_PROFILE_SUCCESS, payload: data});
         dispatch(receiveAuth());
-        dispatch(fetchChat(getActiveChatId(getState())));
+
+        const activeChatId = getActiveChatId(getState());
+        if (activeChatId) {
+          dispatch(fetchChat(activeChatId));
+        }
       })
       .catch(err => dispatch({type: types.UPDATE_USER_PROFILE_FAILURE, payload: err}));
   }

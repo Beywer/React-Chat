@@ -1,10 +1,13 @@
 import {getChatMessages} from "reducers/chats";
 import {FETCH_CHAT_SUCCESS} from "constants/chats";
+import {SEND_MESSAGE_SUCCESS} from "constants/messages";
 
 const initialState = [];
 
 export default function messagesReducer(state = initialState, action = {}) {
   switch (action.type) {
+    case SEND_MESSAGE_SUCCESS:
+      return [...state, action.payload.message];
     case FETCH_CHAT_SUCCESS:
       return [...getChatMessages(action.payload.chat)];
     default:
