@@ -41,6 +41,7 @@ class WelcomePage extends React.Component {
   render() {
     const {classes, signup, login, isAuthenticated} = this.props;
     const {selectedTabIndex} = this.state;
+    console.log(this.props);
 
     if (isAuthenticated) {
       return <Redirect to="/chat"/>

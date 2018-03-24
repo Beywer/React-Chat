@@ -5,6 +5,8 @@ import Avatar from "components/Avatar";
 import Paper from "material-ui/Paper";
 
 import classnames from "classnames";
+import colorFrom from "utils/colorFrom";
+import {fromNow} from "utils/date";
 
 const styles = (theme) => ({
   messageWrapper: {
@@ -13,8 +15,12 @@ const styles = (theme) => ({
     alignItems: 'center',
     padding: `${theme.spacing.unit}px ${theme.spacing.unit * 3}px`,
   },
-  messageWrappperFromMe: {
+  messageWrapperFromMe: {
     justifyContent: 'flex-end',
+  },
+  statusMessageWrapper: {
+    justifyContent: 'center',
+    flexFlow: 'column nowrap'
   },
   message: {
     maxWidth: '70%',
@@ -28,31 +34,43 @@ const styles = (theme) => ({
   },
 });
 
-const Message = ({message, classes}) => {
-  const isMessageFromMe = message.sender === 'Beywer';
+const Message = ({sender, content, createdAt, classes, isStatusMessage, isMessageFromMe}) => {
   const userAvatar = (
-    <Avatar colorFrom={message.sender}>{message.sender}</Avatar>
+    <Avatar colorFrom={sender}>{sender}</Avatar>
   );
-
   return (
-    <div className={classnames(
-      classes.messageWrapper,
-      isMessageFromMe && classes.messageWrappperFromMe
-    )}>
-      {!isMessageFromMe && userAvatar}
-      <Paper className={classnames(
-        classes.message,
-        isMessageFromMe && classes.messageFromMe
+    isStatusMessage ?
+      <div className={classnames(
+        classes.messageWrapper,
+        classes.statusMessageWrapper
       )}>
+        <Typography><span style={{color: colorFrom(sender)}}>{sender}</span> {content}</Typography>
         <Typography variant="caption">
-          {message.sender}
+          {fromNow(createdAt)}
         </Typography>
-        <Typography variant="body1">
-          {message.content}
-        </Typography>
-      </Paper>
-      {isMessageFromMe && userAvatar}
-    </div>
+      </div>
+      :
+      <div className={classnames(
+        classes.messageWrapper,
+        isMessageFromMe && classes.messageWrapperFromMe
+      )}>
+        {!isMessageFromMe && userAvatar}
+        <Paper className={classnames(
+          classes.message,
+          isMessageFromMe && classes.messageFromMe
+        )}>
+          <Typography variant="caption" style={{color: colorFrom(sender)}}>
+            {sender}
+          </Typography>
+          <Typography variant="body1">
+            {content}
+          </Typography>
+          <Typography variant="caption">
+            {fromNow(createdAt)}
+          </Typography>
+        </Paper>
+        {isMessageFromMe && userAvatar}
+      </div>
   );
 };
 

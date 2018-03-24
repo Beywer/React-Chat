@@ -3,7 +3,6 @@ import * as types from 'constants/auth';
 const token = localStorage.getItem('token');
 
 const initialState = {
-  isAuthenticated: !!token,
   user: {},
   token,
 };
@@ -14,7 +13,6 @@ export default function auth(state = initialState, action) {
     case types.SIGNUP_SUCCESS:
       return {
         ...state,
-        isAuthenticated: true,
         user: action.payload.user,
         token: action.payload.token
       };
@@ -22,7 +20,6 @@ export default function auth(state = initialState, action) {
     case types.RECEIVE_AUTH_SUCCESS:
       return {
         ...state,
-        isAuthenticated: true,
         user: action.payload.user
       };
 
@@ -32,7 +29,6 @@ export default function auth(state = initialState, action) {
     case types.LOGOUT_SUCCESS:
       return {
         ...state,
-        isAuthenticated: false,
         user: null,
         token: ''
       };
@@ -43,4 +39,11 @@ export default function auth(state = initialState, action) {
   }
 }
 
-export const getCurrentUserId = (state) => state.user && state.user._id;
+export const isAuthenticated = (state) => !!getToken(state);
+export const getCurrentUser = (state) => state.auth.user;
+export const getToken = (state) => state.auth.token;
+
+export const getUserId = (user) => user._id;
+export const getUsername = (user) => user.username;
+export const getUserFirstName = (user) => user.firstName;
+export const getUserLastName = (user) => user.lastName;

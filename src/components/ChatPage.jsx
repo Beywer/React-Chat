@@ -1,8 +1,10 @@
-import ChatHeader from "components/ChatHeader";
+import React from 'react';
 import {withStyles} from 'material-ui/styles';
+import * as fromChats from 'reducers/chats';
+
+import ChatHeader from "components/ChatHeader";
 import Sidebar from "components/Sidebar";
 import Chat from "components/Chat";
-import React from 'react';
 
 const styles = theme => ({
   root: {
@@ -24,10 +26,15 @@ class ChatPage extends React.Component {
   handleMyChatsSelect = () => this.setState({showOnlyMyChats: true});
   handleAllChatsSelect = () => this.setState({showOnlyMyChats: false});
 
-
   componentDidMount() {
     const {fetchAllChats, fetchMyChats} = this.props;
     Promise.all([fetchAllChats(), fetchMyChats()]);
+
+    // Смена чата при переходе по ссылке
+    const activeChatId = this.props.location.pathname.replace('/chat/', '');
+    if (activeChatId !== this.props.activeChatId) {
+      this.props.setActiveChat(activeChatId);
+    }
   }
 
   render() {
@@ -35,34 +42,52 @@ class ChatPage extends React.Component {
       classes,
       allChats,
       myChats,
-      getChat,
-      isChatCreator,
       createChat,
+      activeChat,
+      activeChatId,
       setActiveChat,
+      isChatMember,
+      isChatCreator,
+      isChatMemberOrCreator,
       deleteChat,
-      logout
+      leaveChat,
+      logout,
+      joinChat,
+      messages,
+      sendMessage,
+      currentUserId,
+      currentUser,
+      updateUserProfile,
     } = this.props;
     const chats = this.state.showOnlyMyChats ? myChats : allChats;
-    const messages = [];
-    const activeChatId = this.props.location.pathname.replace('/chat/', '');
-    const activeChat = getChat(activeChatId) || {};
+
     return (
       <div className={classes.root}>
         <ChatHeader
-          chatName={activeChat && activeChat.title}
-          isChatCreator={isChatCreator(activeChatId)}
-          onChatDelete={() => deleteChat(activeChatId)}
+          chatName={fromChats.getChatName(activeChat)}
+          isChatMember={isChatMember}
+          isChatCreator={isChatCreator}
           onLogout={logout}
+          onChatLeave={() => leaveChat(activeChatId)}
+          onChatDelete={() => deleteChat(activeChatId)}
+          currentUser={currentUser}
+          updateUserProfile={updateUserProfile}
         />
         <Sidebar
           chats={chats}
           onMyChatsSelect={this.handleMyChatsSelect}
           onAllChatsSelect={this.handleAllChatsSelect}
+          activeChatId={activeChatId}
           onChatCreate={createChat}
           onChatSelect={setActiveChat}
         />
         <Chat
           messages={messages}
+          activeChatId={activeChatId}
+          isChatMemberOrCreator={isChatMemberOrCreator}
+          joinChat={joinChat}
+          sendMessage={sendMessage}
+          currentUserId={currentUserId}
         />
       </div>);
   }

@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {Route, Redirect, withRouter} from 'react-router-dom';
 import {receiveAuth} from 'actions/auth';
+import * as fromAuth from 'reducers/auth';
 
 class PrivateRoute extends React.Component {
 
@@ -31,7 +32,7 @@ class PrivateRoute extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  isAuthenticated: state.auth.isAuthenticated
+  isAuthenticated: fromAuth.isAuthenticated(state)
 });
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({

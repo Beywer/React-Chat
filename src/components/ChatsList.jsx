@@ -11,12 +11,13 @@ const styles = (theme) => ({
   },
 });
 
-const ChatsList = ({classes, chats, onChatSelect}) => (
+const ChatsList = ({classes, chats, activeChatId, onChatSelect}) => (
   <List className={classes.chatsList}>
     {chats && chats.map((chat, index) => (
       <ChatItem
         key={index}
         {...chat}
+        selected={getChatId(chat) === activeChatId}
         onClick={() => onChatSelect(getChatId(chat))}
       />
     ))}

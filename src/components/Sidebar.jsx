@@ -7,6 +7,7 @@ import ChatsList from "components/ChatsList";
 import SearchBar from "components/SearchBar";
 import NavigationPanel from "components/NavigationPanel";
 import CreateChatButton from "components/CreateChatButton";
+import {getChatName} from "reducers/chats";
 
 const styles = (theme) => ({
   drawerPaper: {
@@ -22,26 +23,46 @@ const styles = (theme) => ({
   },
 });
 
-const Sidebar = ({classes, chats, onMyChatsSelect, onAllChatsSelect, onChatSelect, onChatCreate}) => (
-  <Drawer
-    variant="permanent"
-    classes={{paper: classes.drawerPaper}}>
-    <SearchBar/>
-    <Divider/>
-    <ChatsList
-      chats={chats}
-      onChatSelect={onChatSelect}
-    />
 
-    <CreateChatButton
-      className={classes.newChatButton}
-      onChatCreate={onChatCreate}
-    />
-    <NavigationPanel
-      onMyChatsSelect={onMyChatsSelect}
-      onAllChatsSelect={onAllChatsSelect}
-    />
-  </Drawer>
-);
+class Sidebar extends React.Component {
+
+  state = {
+    filterString: ''
+  };
+
+  handleFilterStringChange = (e) => this.setState({filterString: e.target.value});
+
+  render() {
+    const {classes, chats, onMyChatsSelect, onAllChatsSelect, activeChatId, onChatSelect, onChatCreate} = this.props;
+    const {filterString} = this.state;
+
+    const filteredChats = filterString ? chats.filter(chat => getChatName(chat).indexOf(filterString) !== -1) : chats;
+
+    return (
+      <Drawer
+        variant="permanent"
+        classes={{paper: classes.drawerPaper}}>
+        <SearchBar
+          onChange={this.handleFilterStringChange}
+        />
+        <Divider/>
+        <ChatsList
+          chats={filteredChats}
+          activeChatId={activeChatId}
+          onChatSelect={onChatSelect}
+        />
+
+        <CreateChatButton
+          className={classes.newChatButton}
+          onChatCreate={onChatCreate}
+        />
+        <NavigationPanel
+          onMyChatsSelect={onMyChatsSelect}
+          onAllChatsSelect={onAllChatsSelect}
+        />
+      </Drawer>
+    )
+  }
+}
 
 export default withStyles(styles)(Sidebar);

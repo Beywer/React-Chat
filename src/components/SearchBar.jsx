@@ -10,12 +10,13 @@ const styles = (theme) => ({
   },
 });
 
-const SearchBar = ({classes}) => (
+const SearchBar = ({classes, onChange}) => (
   <div className={classes.drawerHeader}>
     <TextField
       fullWidth
       margin="normal"
-      placeholder="Search chats..."/>
+      placeholder="Search chats..."
+      onChange={onChange}/>
   </div>
 );
 

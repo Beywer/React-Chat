@@ -7,7 +7,7 @@ import Menu from "material-ui/Menu/Menu";
 import MenuItem from "material-ui/Menu/MenuItem";
 import IconButton from "material-ui/IconButton/IconButton";
 import MoreVertIcon from "material-ui-icons/MoreVert";
-import UserIcon from "material-ui-icons/AccountCircle";
+import UserIcon from 'components/UserIcon';
 
 const styles = (theme) => ({
   appBar: {
@@ -26,7 +26,6 @@ class ChatHeader extends React.Component {
 
   state = {
     menuButtonAnchor: null,
-    userMenuAnchor: null
   };
 
   handleMenuOpen = (e) => this.setState({menuButtonAnchor: e.currentTarget});
@@ -35,21 +34,15 @@ class ChatHeader extends React.Component {
     this.handleMenuClose();
     this.props.onChatDelete();
   };
+  handleLeaveChatClick = (e) => {
+    this.handleMenuClose();
+    this.props.onChatLeave();
+  };
 
-  handleUserMenuOpen = (e) => this.setState({userMenuAnchor: e.currentTarget});
-  handleUserMenuClose = () => this.setState({userMenuAnchor: null});
-  handleEditProfileClick = () => {
-    this.handleUserMenuClose();
-    console.log('handleEditProfileClick');
-  };
-  handleLogoutClick = () => {
-    this.handleUserMenuClose();
-    this.props.onLogout();
-  };
 
   render() {
-    const {classes, chatName, isChatCreator} = this.props;
-    const {menuButtonAnchor, userMenuAnchor} = this.state;
+    const {classes, chatName, isChatCreator, isChatMember, onLogout, currentUser, updateUserProfile} = this.props;
+    const {menuButtonAnchor} = this.state;
 
     return (
       <AppBar color="primary" className={classes.appBar}>
@@ -59,7 +52,7 @@ class ChatHeader extends React.Component {
           </Typography>
 
           {
-            isChatCreator &&
+            (isChatCreator || isChatMember) &&
             <IconButton
               className={classes.menuButton}
               onClick={this.handleMenuOpen}
@@ -73,29 +66,17 @@ class ChatHeader extends React.Component {
             open={Boolean(menuButtonAnchor)}
             onClose={this.handleMenuClose}
           >
-            <MenuItem onClick={this.handleDeleteChatClick}>
-              Delete
-            </MenuItem>
+            {isChatCreator && <MenuItem onClick={this.handleDeleteChatClick}>Delete</MenuItem>}
+            {isChatMember && <MenuItem onClick={this.handleLeaveChatClick}>Leave</MenuItem>}
           </Menu>
 
           <div className={classes.spaceDivider}/>
 
-          <IconButton
-            className={classes.menuButton}
-            onClick={this.handleUserMenuOpen}
-          >
-            <UserIcon/>
-          </IconButton>
-
-          <Menu
-            anchorEl={userMenuAnchor}
-            open={Boolean(userMenuAnchor)}
-            onClose={this.handleUserMenuClose}
-          >
-            <MenuItem onClick={this.handleEditProfileClick}>Edit profile</MenuItem>
-            <MenuItem onClick={this.handleLogoutClick}>Logout</MenuItem>
-          </Menu>
-
+          <UserIcon
+            onLogout={onLogout}
+            currentUser={currentUser}
+            onUserProfileChange={updateUserProfile}
+          />
         </Toolbar>
       </AppBar>
     )

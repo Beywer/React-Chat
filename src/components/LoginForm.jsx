@@ -1,7 +1,7 @@
 import React from 'react';
 import {withStyles} from 'material-ui/styles';
 import TextField from "material-ui/TextField/TextField";
-import Button from "material-ui/es/Button/Button";
+import Button from "material-ui/Button/Button";
 
 const styles = (theme) => ({
   form: {

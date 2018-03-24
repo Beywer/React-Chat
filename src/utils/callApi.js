@@ -1,12 +1,15 @@
 import fetch from "isomorphic-fetch";
 
-export default function callApi(endpoint, token, options, payload) {
+const origin = 'http://localhost:8000';
+// const origin = 'https://dogecodes-chat-api.herokuapp.com';
+
+export default function callApi(endpoint, token, options = {}, payload) {
   const authHeaders = token ? {
       'Authorization': `Bearer ${token}`
     }
     : {};
 
-  return fetch(`http://localhost:8000/v1${endpoint}`, {
+  return fetch(`${origin}/v1${endpoint}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',

@@ -37,8 +37,10 @@ const myIds = (state = initialState.myIds, action = {}) => {
     case types.FETCH_MY_CHATS_SUCCESS:
       return action.payload.chats.map(getChatId);
     case types.CREATE_CHAT_SUCCESS:
+    case types.JOIN_CHAT_SUCCESS:
       return [...state, getChatId(action.payload.chat)];
     case types.DELETE_CHAT_SUCCESS:
+    case types.LEAVE_CHAT_SUCCESS:
       return state.filter(id => id !== getChatId(action.payload.chat));
     default:
       return state;
@@ -56,6 +58,7 @@ const byIds = (state = initialState.byIds, action = {}) => {
           return byIds;
         }, {})
       };
+    case types.FETCH_CHAT_SUCCESS:
     case types.CREATE_CHAT_SUCCESS:
       return {
         ...state,
@@ -70,20 +73,34 @@ const byIds = (state = initialState.byIds, action = {}) => {
   }
 };
 
-export const getChatId = (chat) => chat._id;
-export const getChat = (state, id) => state.byIds[id];
-export const getByIds = (state, idList) => idList.map(id => state.byIds[id]);
+export const getActiveChatId = (state) => state.chats.activeId;
+export const getChat = (state, id) => state.chats.byIds[id];
+export const getMyIds = (state) => state.chats.myIds;
+export const getAllIds = (state) => state.chats.allIds;
+export const getByIds = (state, idList) => idList.map(id => state.chats.byIds[id]);
+
+export const getChatId = (chat) => chat && chat._id;
+export const getChatName = (chat) => chat && chat.title;
+export const getChatMembers = (chat) => chat && chat.members;
+export const getChatMessages = (chat) => chat && chat.messages;
+
 export const isChatCreator = (state, userId, chatId) => {
-  if (!chatId) return false;
-  const chat = getChat(state, chatId);
-  if (!chat) return false;
-  return chat.creator && chat.creator._id === userId;
+  try {
+    return getChat(state, chatId).creator._id === userId;
+  } catch (err) {
+    return false;
+  }
 };
 export const isChatMember = (state, userId, chatId) => {
-  return getChat(state, chatId)
-    .members
-    .map(m => m._id)
-    .indexOf(userId) !== -1;
+  try {
+    return !!getChatMembers(getChat(state, chatId))
+      .find(m => m._id === userId);
+  } catch (err) {
+    return false;
+  }
+};
+export const isChatMemberOrCreator = (state, userId, chatId) => {
+  return isChatCreator(state, userId, chatId) || isChatMember(state, userId, chatId);
 };
 
 export const chatsReducer = combineReducers({

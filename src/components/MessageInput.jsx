@@ -2,6 +2,7 @@ import React from 'react';
 import {withStyles} from 'material-ui/styles';
 import Input from "material-ui/Input";
 import Paper from "material-ui/Paper";
+import Button from "material-ui/Button/Button";
 
 const styles = (theme) => ({
   messageInputWrapper: {
@@ -19,12 +20,47 @@ const styles = (theme) => ({
   },
 });
 
-const MessageInput = ({classes}) => (
-  <div className={classes.messageInputWrapper}>
-    <Paper className={classes.messageInput} elevation={6}>
-      <Input fullWidth placeholder="Type your message…"/>
-    </Paper>
-  </div>
-);
+class MessageInput extends React.Component {
+
+  state = {
+    message: '',
+    readOnly: false
+  };
+
+  handleMessageChange = (e) => {
+    this.setState({message: e.target.value});
+  };
+
+  handleSubmit = (e) => {
+    e.preventDefault();
+    this.setState({readOnly: true});
+    this.props.onMessageInput(this.state.message)
+      .then(() => {
+        this.setState({readOnly: false, message: ''});
+      })
+  };
+
+  render() {
+    const {classes, isChatMemberOrCreator, joinChat} = this.props;
+    const {message, readOnly} = this.state;
+    return (
+      <form className={classes.messageInputWrapper} onSubmit={this.handleSubmit}>
+        <Paper className={classes.messageInput} elevation={6}>
+          {isChatMemberOrCreator && <Input fullWidth
+                                           type="text"
+                                           placeholder="Type your message…"
+                                           readOnly={readOnly}
+                                           value={message}
+                                           onChange={this.handleMessageChange}/>
+          }
+          {!isChatMemberOrCreator && <Button variant="raised" color="primary" fullWidth={true} onClick={joinChat}>
+            JOIN
+          </Button>
+          }
+        </Paper>
+      </form>
+    )
+  }
+}
 
 export default withStyles(styles)(MessageInput);

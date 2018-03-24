@@ -1,21 +1,14 @@
+import {loginApi, logoutApi, receiveAuthApi, signupApi, updateUserProfileApi} from "utils/api";
 import * as types from 'constants/auth';
-import fetch from "isomorphic-fetch";
-import {logoutApi} from "utils/api";
+import {getToken} from "reducers/auth";
+import {fetchChat} from "actions/chats";
+import {getActiveChatId} from "reducers/chats";
 
 export function signup(username, password) {
   return (dispatch) => {
     dispatch({type: types.SIGNUP_REQUEST});
 
-    return fetch('http://localhost:8000/v1/signup', {
-      method: 'POST',
-      body: JSON.stringify({username, password}),
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      }
-    })
-      .then(resp => resp.json())
-      .then(throwOnError)
+    return signupApi(username, password)
       .then(json => {
         if (!json.token) throw new Error('Token has not be provided');
         localStorage.setItem('token', json.token);
@@ -29,16 +22,7 @@ export function login(username, password) {
   return (dispatch) => {
     dispatch({type: types.LOGIN_REQUEST});
 
-    return fetch('http://localhost:8000/v1/login', {
-      method: 'POST',
-      body: JSON.stringify({username, password}),
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      }
-    })
-      .then(resp => resp.json())
-      .then(throwOnError)
+    return loginApi(username, password)
       .then(json => {
         if (!json.token) throw new Error('Token has not be provided');
         localStorage.setItem('token', json.token);
@@ -63,27 +47,28 @@ export function logout() {
 
 export function receiveAuth() {
   return function (dispatch, getState) {
-    const {token} = getState().auth;
+    const token = getToken(getState());
 
-    if (!token) {
-      dispatch({type: types.RECEIVE_AUTH_FAILURE})
-    }
+    dispatch({type: types.RECEIVE_AUTH_REQUEST});
 
-    return fetch('http://localhost:8000/v1/users/me', {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      }
-    })
-      .then(resp => resp.json())
-      .then(throwOnError)
+    return receiveAuthApi(token)
       .then(json => dispatch({type: types.RECEIVE_AUTH_SUCCESS, payload: json}))
       .catch(err => dispatch({type: types.RECEIVE_AUTH_FAILURE, payload: err}));
   }
 }
 
-function throwOnError(jsonResult) {
-  if (jsonResult.success) return jsonResult;
-  throw new Error(jsonResult.message);
+export function updateUserProfile(username, firstName, lastName) {
+  return function (dispatch, getState) {
+    dispatch({type: types.UPDATE_USER_PROFILE_REQUEST});
+
+    const token = getToken(getState());
+
+    return updateUserProfileApi(token, {username, firstName, lastName})
+      .then(data => {
+        dispatch({type: types.UPDATE_USER_PROFILE_SUCCESS, payload: data});
+        dispatch(receiveAuth());
+        dispatch(fetchChat(getActiveChatId(getState())));
+      })
+      .catch(err => dispatch({type: types.UPDATE_USER_PROFILE_FAILURE, payload: err}));
+  }
 }
