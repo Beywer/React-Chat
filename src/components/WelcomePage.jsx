@@ -1,4 +1,5 @@
 import React from 'react';
+import {Redirect} from 'react-router-dom';
 import {withStyles} from 'material-ui/styles';
 import AppBar from "material-ui/AppBar";
 import Toolbar from "material-ui/Toolbar";
@@ -31,20 +32,20 @@ class WelcomePage extends React.Component {
     super(props);
     this.state = {selectedTabIndex: 0};
     this.handleTabItemClick = this.handleTabItemClick.bind(this);
-    this.handleForSubmit = this.handleForSubmit.bind(this);
   }
 
   handleTabItemClick(e, tabIndex) {
     this.setState({selectedTabIndex: tabIndex});
   }
 
-  handleForSubmit({username, password, repeatedPassword}) {
-    console.log(username, password, repeatedPassword);
-  }
-
   render() {
-    const {classes} = this.props;
+    const {classes, signup, login, isAuthenticated} = this.props;
     const {selectedTabIndex} = this.state;
+
+    if (isAuthenticated) {
+      return <Redirect to="/chat"/>
+    }
+
     return (<div>
         <AppBar position="static" color="primary">
           <Toolbar>
@@ -67,7 +68,8 @@ class WelcomePage extends React.Component {
               </Tabs>
             </AppBar>
 
-            {selectedTabIndex === 0 ? <LoginForm/> : <SignUpForm/>}
+            {selectedTabIndex === 0 && <LoginForm onSubmit={login}/>}
+            {selectedTabIndex === 1 && <SignUpForm onSubmit={signup}/>}
           </Paper>
         </div>
       </div>

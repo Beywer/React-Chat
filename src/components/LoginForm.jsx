@@ -1,5 +1,4 @@
 import React from 'react';
-import fetch from 'isomorphic-fetch';
 import {withStyles} from 'material-ui/styles';
 import TextField from "material-ui/TextField/TextField";
 import Button from "material-ui/es/Button/Button";
@@ -23,7 +22,7 @@ class LoginForm extends React.Component {
   constructor(props) {
     super(props);
     this.handleInputChange = this.handleInputChange.bind(this);
-    this.handleSubmitClick = this.handleSubmitClick.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleInputChange(e) {
@@ -37,29 +36,15 @@ class LoginForm extends React.Component {
     }));
   }
 
-  handleSubmitClick(e) {
+  handleSubmit(e) {
+    e.preventDefault();
+
     if (!this.validate()) {
       return;
     }
 
-    fetch('https://dogecodes-chat-api.herokuapp.com/v1/login', {
-      method: 'POST',
-      query: {
-        test1: 'asdfasd',
-        test2: 23
-      },
-      body: JSON.stringify({
-        username: this.state.username.value,
-        password: this.state.password.value
-      }),
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      }
-    })
-      .then(resp => resp.json())
-      .then(console.log)
-      .catch(console.error);
+    const {username, password} = this.state;
+    this.props.onSubmit(username.value, password.value);
   }
 
   validate() {
@@ -75,10 +60,11 @@ class LoginForm extends React.Component {
   render() {
     const {classes} = this.props;
     return (
-      <div className={classes.form}>
+      <form className={classes.form} onSubmit={this.handleSubmit}>
         <TextField
           required
           fullWidth
+          type="text"
           className={classes.topOffset}
           label="Username"
           placeholder="Input your username"
@@ -104,10 +90,10 @@ class LoginForm extends React.Component {
           variant="raised"
           color="primary"
           fullWidth
+          type="submit"
           className={classes.topOffset}
-          onClick={this.handleSubmitClick}
         >Login</Button>
-      </div>
+      </form>
     )
   }
 }
