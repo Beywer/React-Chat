@@ -24,7 +24,6 @@ class MessageInput extends React.Component {
 
   state = {
     message: '',
-    readOnly: false
   };
 
   handleMessageChange = (e) => {
@@ -35,23 +34,19 @@ class MessageInput extends React.Component {
     e.preventDefault();
     if (!this.state.message) return;
 
-    this.setState({readOnly: true});
-    this.props.onMessageInput(this.state.message)
-      .then(() => {
-        this.setState({readOnly: false, message: ''});
-      })
+    this.props.onMessageInput(this.state.message);
+    this.setState({message: ''});
   };
 
   render() {
     const {classes, isChatMemberOrCreator, joinChat} = this.props;
-    const {message, readOnly} = this.state;
+    const {message} = this.state;
     return (
       <form className={classes.messageInputWrapper} onSubmit={this.handleSubmit}>
         <Paper className={classes.messageInput} elevation={6}>
           {isChatMemberOrCreator && <Input fullWidth
                                            type="text"
                                            placeholder="Type your message…"
-                                           readOnly={readOnly}
                                            value={message}
                                            onChange={this.handleMessageChange}/>
           }

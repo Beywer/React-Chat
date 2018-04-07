@@ -27,8 +27,12 @@ class ChatPage extends React.Component {
   handleAllChatsSelect = () => this.setState({showOnlyMyChats: false});
 
   componentDidMount() {
-    const {fetchAllChats, fetchMyChats} = this.props;
-    Promise.all([fetchAllChats(), fetchMyChats()]);
+    const {fetchAllChats, fetchMyChats, socketsConnect} = this.props;
+
+    Promise.all([fetchAllChats(), fetchMyChats()])
+      .then(() => {
+        socketsConnect();
+      });
 
     // Смена чата при переходе по ссылке
     const activeChatId = this.props.location.pathname.replace('/chat/', '');

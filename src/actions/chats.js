@@ -4,8 +4,9 @@ import {
   createChatApi, deleteChatApi, getAllChatsApi, getChatApi, getMyChatsApi, joinChatApi,
   leaveChatApi
 } from "utils/api";
-import {getChatId} from "reducers/chats";
+import {getActiveChatId, getChatId} from "reducers/chats";
 import {getToken} from "reducers/auth";
+import {mountChat, unmountChat} from "actions/sockets";
 
 export function fetchMyChats() {
   return function (dispatch, getState) {
@@ -48,6 +49,10 @@ export function fetchChat(chatId) {
 
 export function setActiveChat(chatId) {
   return function (dispatch, getState) {
+
+    const prevActiveChatId = getActiveChatId(getState());
+    if (prevActiveChatId) dispatch(unmountChat(prevActiveChatId));
+
     return dispatch(fetchChat(chatId))
       .then(data => {
         if (!data) {
@@ -56,6 +61,7 @@ export function setActiveChat(chatId) {
 
         dispatch(redirect(`/chat/${getChatId(data.chat)}`));
         dispatch({type: types.SET_ACTIVE_CHAT, payload: data});
+        dispatch(mountChat(chatId));
       })
   }
 }
