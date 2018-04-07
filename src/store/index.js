@@ -11,7 +11,11 @@ export default function configureStore() {
       applyMiddleware(thunkMiddleware)
     );
   } else {
-    const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({serialize: true}) || compose;
+
+    const devToolsCompose = typeof window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ === 'function' ?
+      window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({serialize: true}) :
+      null;
+    const composeEnhancers = devToolsCompose || compose;
     store = createStore(
       rootReducer,
       composeEnhancers(
