@@ -10,6 +10,7 @@ import {getToken} from "reducers/auth";
 import {getActiveChatId, getChatId} from "reducers/chats";
 import {unsetActiveChat} from "actions/chats";
 import {origin} from "utils/callApi";
+import {isSocketsFetching} from "reducers/services";
 
 let socket = null;
 
@@ -19,6 +20,8 @@ export function missingSocketConnection() {
 
 export function socketsConnect() {
   return function (dispatch, getState) {
+    if (isSocketsFetching(getState())) return Promise.resolve();
+
     dispatch({type: SOCKET_CONNECTION_REQUEST});
 
     const token = getToken(getState());

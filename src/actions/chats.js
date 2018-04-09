@@ -1,18 +1,23 @@
 import * as types from "constants/chats";
 import {redirect} from "actions/services";
 import {
-  createChatApi, deleteChatApi, getAllChatsApi, getChatApi, getMyChatsApi, joinChatApi,
-  leaveChatApi
+  createChatApi, deleteChatApi, getAllChatsApi, getChatApi, getMyChatsApi, joinChatApi, leaveChatApi
 } from "utils/api";
 import {getActiveChatId, getChatId} from "reducers/chats";
 import {getToken} from "reducers/auth";
 import {mountChat, unmountChat} from "actions/sockets";
+import {
+  isAllChatsFetching, isChatFetching, isCreateChatFetching, isDeleteChatFetching, isJoinChatFetching,
+  isLeaveChatFetching, isMyChatsFetching
+} from "reducers/services";
 
 export function fetchMyChats() {
   return function (dispatch, getState) {
-    const token = getToken(getState());
+    if (isMyChatsFetching(getState())) return Promise.resolve();
+
     dispatch({type: types.FETCH_MY_CHATS_REQUEST});
 
+    const token = getToken(getState());
     return getMyChatsApi(token)
       .then(data => dispatch({type: types.FETCH_MY_CHATS_SUCCESS, payload: data}))
       .catch(error => dispatch({type: types.FETCH_MY_CHATS_FAILURE, payload: error}))
@@ -21,9 +26,11 @@ export function fetchMyChats() {
 
 export function fetchAllChats() {
   return function (dispatch, getState) {
-    const token = getToken(getState());
+    if (isAllChatsFetching(getState())) return Promise.resolve();
+
     dispatch({type: types.FETCH_ALL_CHATS_REQUEST});
 
+    const token = getToken(getState());
     return getAllChatsApi(token)
       .then(data => dispatch({type: types.FETCH_ALL_CHATS_SUCCESS, payload: data}))
       .catch(error => dispatch({type: types.FETCH_ALL_CHATS_FAILURE, payload: error}))
@@ -32,9 +39,11 @@ export function fetchAllChats() {
 
 export function fetchChat(chatId) {
   return function (dispatch, getState) {
-    const token = getToken(getState());
+    if (isChatFetching(getState())) return Promise.resolve();
+
     dispatch({type: types.FETCH_CHAT_REQUEST});
 
+    const token = getToken(getState());
     return getChatApi(chatId, token)
       .then(data => {
         dispatch({type: types.FETCH_CHAT_SUCCESS, payload: data});
@@ -59,8 +68,8 @@ export function setActiveChat(chatId) {
           return dispatch(unsetActiveChat());
         }
 
-        dispatch(redirect(`/chat/${getChatId(data.chat)}`));
         dispatch({type: types.SET_ACTIVE_CHAT, payload: data});
+        dispatch(redirect(`/chat/${getChatId(data.chat)}`));
         dispatch(mountChat(chatId));
       })
   }
@@ -75,9 +84,11 @@ export function unsetActiveChat() {
 
 export function createChat(title) {
   return function (dispatch, getState) {
-    const token = getToken(getState());
+    if (isCreateChatFetching(getState())) return Promise.resolve();
+
     dispatch({type: types.CREATE_CHAT_REQUEST});
 
+    const token = getToken(getState());
     return createChatApi(title, token)
       .then(data => dispatch({type: types.CREATE_CHAT_SUCCESS, payload: data}))
       .catch(error => dispatch({type: types.CREATE_CHAT_FAILURE}));
@@ -86,9 +97,11 @@ export function createChat(title) {
 
 export function deleteChat(chatId) {
   return function (dispatch, getState) {
-    const token = getToken(getState());
+    if (isDeleteChatFetching(getState())) return Promise.resolve();
+
     dispatch({type: types.DELETE_CHAT_REQUEST});
 
+    const token = getToken(getState());
     return deleteChatApi(chatId, token)
       .then(data => {
         dispatch(unsetActiveChat());
@@ -100,9 +113,11 @@ export function deleteChat(chatId) {
 
 export function joinChat(chatId) {
   return function (dispatch, getState) {
-    const token = getToken(getState());
+    if (isJoinChatFetching(getState())) return Promise.resolve();
+
     dispatch({type: types.JOIN_CHAT_REQUEST});
 
+    const token = getToken(getState());
     return joinChatApi(chatId, token)
       .then(data => {
         dispatch(fetchChat(chatId));
@@ -114,9 +129,11 @@ export function joinChat(chatId) {
 
 export function leaveChat(chatId) {
   return function (dispatch, getState) {
-    const token = getToken(getState());
+    if (isLeaveChatFetching(getState())) return Promise.resolve();
+
     dispatch({type: types.LEAVE_CHAT_REQUEST});
 
+    const token = getToken(getState());
     return leaveChatApi(chatId, token)
       .then(data => {
         dispatch(fetchChat(chatId));

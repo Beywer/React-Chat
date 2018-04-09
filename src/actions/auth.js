@@ -3,9 +3,15 @@ import * as types from 'constants/auth';
 import {getToken} from "reducers/auth";
 import {fetchChat} from "actions/chats";
 import {getActiveChatId} from "reducers/chats";
+import {
+  isEditUserFetching, isLogInFetching, isLogOutFetching, isReceiveAuthFetching,
+  isSignUpFetching
+} from "reducers/services";
 
 export function signup(username, password) {
-  return (dispatch) => {
+  return (dispatch, getState) => {
+    if (isSignUpFetching(getState())) return Promise.resolve();
+
     dispatch({type: types.SIGNUP_REQUEST});
 
     return signupApi(username, password)
@@ -19,7 +25,9 @@ export function signup(username, password) {
 }
 
 export function login(username, password) {
-  return (dispatch) => {
+  return (dispatch, getState) => {
+    if (isLogInFetching(getState())) return Promise.resolve();
+
     dispatch({type: types.LOGIN_REQUEST});
 
     return loginApi(username, password)
@@ -33,7 +41,9 @@ export function login(username, password) {
 }
 
 export function logout() {
-  return (dispatch) => {
+  return (dispatch, getState) => {
+    if (isLogOutFetching(getState())) return Promise.resolve();
+
     dispatch({type: types.LOGOUT_REQUEST});
 
     return logoutApi()
@@ -47,10 +57,11 @@ export function logout() {
 
 export function receiveAuth() {
   return function (dispatch, getState) {
-    const token = getToken(getState());
+    if (isReceiveAuthFetching(getState())) return Promise.resolve();
 
     dispatch({type: types.RECEIVE_AUTH_REQUEST});
 
+    const token = getToken(getState());
     return receiveAuthApi(token)
       .then(json => dispatch({type: types.RECEIVE_AUTH_SUCCESS, payload: json}))
       .catch(err => dispatch({type: types.RECEIVE_AUTH_FAILURE, payload: err}));
@@ -59,10 +70,11 @@ export function receiveAuth() {
 
 export function updateUserProfile(username, firstName, lastName) {
   return function (dispatch, getState) {
+    if (isEditUserFetching(getState())) return Promise.resolve();
+
     dispatch({type: types.UPDATE_USER_PROFILE_REQUEST});
 
     const token = getToken(getState());
-
     return updateUserProfileApi(token, {username, firstName, lastName})
       .then(data => {
         dispatch({type: types.UPDATE_USER_PROFILE_SUCCESS, payload: data});
