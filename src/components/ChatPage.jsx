@@ -5,6 +5,7 @@ import * as fromChats from 'reducers/chats';
 import ChatHeader from "components/ChatHeader";
 import Sidebar from "components/Sidebar";
 import Chat from "components/Chat";
+import ErrorMessage from "components/ErrorMessage";
 
 const styles = theme => ({
   root: {
@@ -62,6 +63,7 @@ class ChatPage extends React.Component {
       currentUserId,
       currentUser,
       updateUserProfile,
+      error,
     } = this.props;
     const chats = this.state.showOnlyMyChats ? myChats : allChats;
 
@@ -93,6 +95,8 @@ class ChatPage extends React.Component {
           sendMessage={sendMessage}
           currentUserId={currentUserId}
         />
+
+        <ErrorMessage error={error}/>
       </div>);
   }
 }

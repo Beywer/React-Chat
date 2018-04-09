@@ -31,6 +31,10 @@ const initialState = {
     deleteChat: false,
     sockets: false,
     editUser: false
+  },
+  errors: {
+    auth: null,
+    chat: null
   }
 };
 
@@ -119,6 +123,47 @@ export function isFetching(state = initialState.isFetching, action = {}) {
   }
 }
 
+export function errors(state = initialState.errors, action = {}) {
+  switch (action.type) {
+    case SIGNUP_FAILURE:
+    case LOGIN_FAILURE:
+    case LOGOUT_FAILURE:
+      // Used for internal purposes
+      // case RECEIVE_AUTH_FAILURE:
+      return {...state, auth: action.payload.message};
+    case SIGNUP_SUCCESS:
+    case LOGIN_SUCCESS:
+    case LOGOUT_SUCCESS:
+      // case RECEIVE_AUTH_SUCCESS:
+      return {...state, auth: null};
+
+    case FETCH_MY_CHATS_FAILURE:
+    case FETCH_ALL_CHATS_FAILURE:
+    case FETCH_CHAT_FAILURE:
+    case CREATE_CHAT_FAILURE:
+    case JOIN_CHAT_FAILURE:
+    case LEAVE_CHAT_FAILURE:
+    case DELETE_CHAT_FAILURE:
+    case SOCKET_CONNECTION_FAILURE:
+    case UPDATE_USER_PROFILE_FAILURE:
+      return {...state, chat: action.payload.message};
+
+    case FETCH_MY_CHATS_SUCCESS:
+    case FETCH_ALL_CHATS_SUCCESS:
+    case FETCH_CHAT_SUCCESS:
+    case CREATE_CHAT_SUCCESS:
+    case JOIN_CHAT_SUCCESS:
+    case LEAVE_CHAT_SUCCESS:
+    case DELETE_CHAT_SUCCESS:
+    case SOCKET_CONNECTION_SUCCESS:
+    case UPDATE_USER_PROFILE_SUCCESS:
+      return {...state, chat: null};
+
+    default:
+      return state;
+  }
+}
+
 export const isSignUpFetching = (state) => state.services.isFetching.signUp;
 export const isLogInFetching = (state) => state.services.isFetching.logIn;
 export const isLogOutFetching = (state) => state.services.isFetching.logOut;
@@ -133,6 +178,9 @@ export const isDeleteChatFetching = (state) => state.services.isFetching.deleteC
 export const isSocketsFetching = (state) => state.services.isFetching.sockets;
 export const isEditUserFetching = (state) => state.services.isFetching.editUser;
 
+export const getAuthErrorMessage = (state) => state.services.errors.auth;
+export const getChatErrorMessage = (state) => state.services.errors.chat;
+
 export default combineReducers({
-  isFetching
+  isFetching, errors
 })

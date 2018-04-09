@@ -9,6 +9,7 @@ import Tabs, {Tab} from "material-ui/Tabs";
 
 import LoginForm from "components/LoginForm";
 import SignUpForm from "components/SignUpForm";
+import ErrorMessage from "components/ErrorMessage";
 
 const styles = (theme) => ({
   formWrapper: {
@@ -39,9 +40,8 @@ class WelcomePage extends React.Component {
   }
 
   render() {
-    const {classes, signup, login, isAuthenticated} = this.props;
+    const {classes, signup, login, isAuthenticated, error} = this.props;
     const {selectedTabIndex} = this.state;
-    console.log(this.props);
 
     if (isAuthenticated) {
       return <Redirect to="/chat"/>
@@ -73,6 +73,8 @@ class WelcomePage extends React.Component {
             {selectedTabIndex === 1 && <SignUpForm onSubmit={signup}/>}
           </Paper>
         </div>
+
+        <ErrorMessage error={error}/>
       </div>
     )
   }

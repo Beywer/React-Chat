@@ -91,7 +91,7 @@ export function createChat(title) {
     const token = getToken(getState());
     return createChatApi(title, token)
       .then(data => dispatch({type: types.CREATE_CHAT_SUCCESS, payload: data}))
-      .catch(error => dispatch({type: types.CREATE_CHAT_FAILURE}));
+      .catch(error => dispatch({type: types.CREATE_CHAT_FAILURE, payload: error}));
   }
 }
 
