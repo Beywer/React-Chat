@@ -1,12 +1,25 @@
 import * as types from 'constants/chats';
 import { redirect } from 'actions/services';
-import { createChatApi, deleteChatApi, getAllChatsApi, getChatApi, getMyChatsApi, joinChatApi, leaveChatApi } from 'utils/api';
+import {
+  createChatApi,
+  deleteChatApi,
+  getAllChatsApi,
+  getChatApi,
+  getMyChatsApi,
+  joinChatApi,
+  leaveChatApi,
+} from 'utils/api';
 import { getActiveChatId, getChatId } from 'reducers/chats';
 import { getToken } from 'reducers/auth';
 import { mountChat, unmountChat } from 'actions/sockets';
 import {
-  isAllChatsFetching, isChatFetching, isCreateChatFetching, isDeleteChatFetching, isJoinChatFetching,
-  isLeaveChatFetching, isMyChatsFetching,
+  isAllChatsFetching,
+  isChatFetching,
+  isCreateChatFetching,
+  isDeleteChatFetching,
+  isJoinChatFetching,
+  isLeaveChatFetching,
+  isMyChatsFetching,
 } from 'reducers/services';
 
 export function fetchMyChats() {
@@ -59,16 +72,15 @@ export function setActiveChat(chatId) {
     const prevActiveChatId = getActiveChatId(getState());
     if (prevActiveChatId) dispatch(unmountChat(prevActiveChatId));
 
-    return dispatch(fetchChat(chatId))
-      .then((data) => {
-        if (!data) {
-          return dispatch(unsetActiveChat());
-        }
+    return dispatch(fetchChat(chatId)).then((data) => {
+      if (!data) {
+        return dispatch(unsetActiveChat());
+      }
 
-        dispatch({ type: types.SET_ACTIVE_CHAT, payload: data });
-        dispatch(redirect(`/chat/${getChatId(data.chat)}`));
-        dispatch(mountChat(chatId));
-      });
+      dispatch({ type: types.SET_ACTIVE_CHAT, payload: data });
+      dispatch(redirect(`/chat/${getChatId(data.chat)}`));
+      dispatch(mountChat(chatId));
+    });
   };
 }
 

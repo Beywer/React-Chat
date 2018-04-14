@@ -2,9 +2,14 @@ import SocketClient from 'socket.io-client';
 import {
   MOUNT_CHAT,
   RECEIVE_DELETE_CHAT,
-  RECEIVE_MESSAGE, RECEIVE_NEW_CHAT, SEND_MESSAGE,
-  SOCKET_CONNECTION_FAILURE, SOCKET_CONNECTION_MISSING, SOCKET_CONNECTION_REQUEST,
-  SOCKET_CONNECTION_SUCCESS, UNMOUNT_CHAT,
+  RECEIVE_MESSAGE,
+  RECEIVE_NEW_CHAT,
+  SEND_MESSAGE,
+  SOCKET_CONNECTION_FAILURE,
+  SOCKET_CONNECTION_MISSING,
+  SOCKET_CONNECTION_REQUEST,
+  SOCKET_CONNECTION_SUCCESS,
+  UNMOUNT_CHAT,
 } from 'constants/sockets';
 import { getToken } from 'reducers/auth';
 import { getActiveChatId, getChatId } from 'reducers/chats';
@@ -31,14 +36,10 @@ export function socketsConnect() {
 
     socket.on('connect', () => dispatch({ type: SOCKET_CONNECTION_SUCCESS }));
 
-    socket.on(
-      'error',
-      err => dispatch({ type: SOCKET_CONNECTION_FAILURE, payload: new Error(`Connection ${err}`) }),
-    );
-    socket.on(
-      'connection_error',
-      () => dispatch({ type: SOCKET_CONNECTION_FAILURE, payload: new Error('We have lost connection') }),
-    );
+    socket.on('error', err =>
+      dispatch({ type: SOCKET_CONNECTION_FAILURE, payload: new Error(`Connection ${err}`) }));
+    socket.on('connection_error', () =>
+      dispatch({ type: SOCKET_CONNECTION_FAILURE, payload: new Error('We have lost connection') }));
 
     socket.on('new-message', message => dispatch({ type: RECEIVE_MESSAGE, payload: message }));
     socket.on('new-chat', ({ chat }) => dispatch({ type: RECEIVE_NEW_CHAT, payload: chat }));
@@ -60,11 +61,7 @@ export function sendMessage(content) {
     }
 
     const message = { content, chatId: getActiveChatId(getState()) };
-    socket.emit(
-      'send-message',
-      message,
-      () => dispatch({ type: SEND_MESSAGE, payload: message }),
-    );
+    socket.emit('send-message', message, () => dispatch({ type: SEND_MESSAGE, payload: message }));
   };
 }
 

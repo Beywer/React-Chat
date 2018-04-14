@@ -4,7 +4,10 @@ import { getToken } from 'reducers/auth';
 import { fetchChat } from 'actions/chats';
 import { getActiveChatId } from 'reducers/chats';
 import {
-  isEditUserFetching, isLogInFetching, isLogOutFetching, isReceiveAuthFetching,
+  isEditUserFetching,
+  isLogInFetching,
+  isLogOutFetching,
+  isReceiveAuthFetching,
   isSignUpFetching,
 } from 'reducers/services';
 

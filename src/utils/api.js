@@ -32,7 +32,9 @@ export function getAllChatsApi(token) {
 
 export function createChatApi(title, token) {
   return callApi(
-    '/chats', token, {
+    '/chats',
+    token,
+    {
       method: 'POST',
     },
     { data: { title } },

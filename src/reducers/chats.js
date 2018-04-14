@@ -99,13 +99,13 @@ export const isChatCreator = (state, userId, chatId) => {
 };
 export const isChatMember = (state, userId, chatId) => {
   try {
-    return !!getChatMembers(getChat(state, chatId))
-      .find(m => m._id === userId);
+    return !!getChatMembers(getChat(state, chatId)).find(m => m._id === userId);
   } catch (err) {
     return false;
   }
 };
-export const isChatMemberOrCreator = (state, userId, chatId) => isChatCreator(state, userId, chatId) || isChatMember(state, userId, chatId);
+export const isChatMemberOrCreator = (state, userId, chatId) =>
+  isChatCreator(state, userId, chatId) || isChatMember(state, userId, chatId);
 
 export const chatsReducer = combineReducers({
   activeId,

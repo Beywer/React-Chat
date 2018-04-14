@@ -5,9 +5,10 @@ const { protocol } = window.location;
 // const origin = 'https://dogecodes-chat-api.herokuapp.com';
 
 export default function callApi(endpoint, token, options = {}, payload) {
-  const authHeaders = token ? {
-    Authorization: `Bearer ${token}`,
-  }
+  const authHeaders = token
+    ? {
+      Authorization: `Bearer ${token}`,
+    }
     : {};
 
   return fetch(`${protocol}//${origin}/v1${endpoint}`, {

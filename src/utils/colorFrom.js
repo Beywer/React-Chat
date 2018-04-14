@@ -1,7 +1,33 @@
-import { red, pink, purple, indigo, blue, teal, green, lightGreen, amber, orange, deepOrange, deepPurple, blueGrey } from 'material-ui/colors';
+import {
+  red,
+  pink,
+  purple,
+  indigo,
+  blue,
+  teal,
+  green,
+  lightGreen,
+  amber,
+  orange,
+  deepOrange,
+  deepPurple,
+  blueGrey,
+} from 'material-ui/colors';
 
 const colors = [
-  red, pink, purple, indigo, blue, teal, green, lightGreen, amber, orange, deepOrange, deepPurple, blueGrey,
+  red,
+  pink,
+  purple,
+  indigo,
+  blue,
+  teal,
+  green,
+  lightGreen,
+  amber,
+  orange,
+  deepOrange,
+  deepPurple,
+  blueGrey,
 ];
 
 export default function colorFrom(string) {

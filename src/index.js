@@ -6,7 +6,7 @@ import ReactDOM from 'react-dom';
 import App from 'components/App';
 import registerServiceWorker from 'registerServiceWorker';
 import configureStore from 'store';
-import {Provider} from 'react-redux';
+import { Provider } from 'react-redux';
 
 registerServiceWorker();
 
@@ -21,8 +21,8 @@ if (module.hot) {
 function renderApp() {
   ReactDOM.render(
     <Provider store={store}>
-      <App/>
-    </Provider>
-    , rootEl,
+      <App />
+    </Provider>,
+    rootEl,
   );
 }
