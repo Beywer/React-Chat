@@ -1,16 +1,16 @@
-import callApi from "utils/callApi";
+import callApi from 'utils/callApi';
 
 // AUTH
 export function loginApi(username, password) {
-  return callApi('/login', undefined, {method: 'POST'}, {username, password})
+  return callApi('/login', undefined, { method: 'POST' }, { username, password });
 }
 
 export function signupApi(username, password) {
-  return callApi('/signup', undefined, {method: 'POST'}, {username, password});
+  return callApi('/signup', undefined, { method: 'POST' }, { username, password });
 }
 
 export function logoutApi() {
-  return callApi('/logout')
+  return callApi('/logout');
 }
 
 export function receiveAuthApi(token) {
@@ -18,7 +18,7 @@ export function receiveAuthApi(token) {
 }
 
 export function updateUserProfileApi(token, userProfile) {
-  return callApi('/users/me', token, {method: 'POST'}, {data: userProfile});
+  return callApi('/users/me', token, { method: 'POST' }, { data: userProfile });
 }
 
 // CHATS
@@ -31,21 +31,22 @@ export function getAllChatsApi(token) {
 }
 
 export function createChatApi(title, token) {
-  return callApi('/chats', token, {
-      method: 'POST'
+  return callApi(
+    '/chats', token, {
+      method: 'POST',
     },
-    {data: {title}}
-  )
+    { data: { title } },
+  );
 }
 
 export function getChatApi(chatId, token) {
-  return callApi(`/chats/${chatId}`, token)
+  return callApi(`/chats/${chatId}`, token);
 }
 
 export function deleteChatApi(chatId, token) {
   return callApi(`/chats/${chatId}`, token, {
-    method: 'DELETE'
-  })
+    method: 'DELETE',
+  });
 }
 
 export function joinChatApi(chatId, token) {
@@ -58,5 +59,5 @@ export function leaveChatApi(chatId, token) {
 
 // MESSAGES
 export function sendMessageApi(chatId, message, token) {
-  return callApi(`/chats/${chatId}`, token, {method: 'POST'}, {data: {content: message}});
+  return callApi(`/chats/${chatId}`, token, { method: 'POST' }, { data: { content: message } });
 }

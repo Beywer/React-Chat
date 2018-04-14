@@ -1,12 +1,12 @@
 import * as types from 'constants/chats';
-import {combineReducers} from "redux";
-import {RECEIVE_DELETE_CHAT, RECEIVE_NEW_CHAT} from "constants/sockets";
+import { combineReducers } from 'redux';
+import { RECEIVE_DELETE_CHAT, RECEIVE_NEW_CHAT } from 'constants/sockets';
 
 const initialState = {
   activeId: '',
   allIds: [],
   myIds: [],
-  byIds: {}
+  byIds: {},
 };
 
 const activeId = (state = initialState.activeId, action = {}) => {
@@ -60,18 +60,18 @@ const byIds = (state = initialState.byIds, action = {}) => {
         ...action.payload.chats.reduce((byIds, chat) => {
           byIds[getChatId(chat)] = chat;
           return byIds;
-        }, {})
+        }, {}),
       };
     case types.FETCH_CHAT_SUCCESS:
     case types.CREATE_CHAT_SUCCESS:
     case RECEIVE_NEW_CHAT:
       return {
         ...state,
-        [getChatId(action.payload.chat)]: action.payload.chat
+        [getChatId(action.payload.chat)]: action.payload.chat,
       };
     case types.DELETE_CHAT_SUCCESS:
     case RECEIVE_DELETE_CHAT:
-      const newState = {...state};
+      const newState = { ...state };
       delete newState[getChatId(action.payload.chat)];
       return newState;
     default:
@@ -79,16 +79,16 @@ const byIds = (state = initialState.byIds, action = {}) => {
   }
 };
 
-export const getActiveChatId = (state) => state.chats.activeId;
+export const getActiveChatId = state => state.chats.activeId;
 export const getChat = (state, id) => state.chats.byIds[id];
-export const getMyIds = (state) => state.chats.myIds;
-export const getAllIds = (state) => state.chats.allIds;
+export const getMyIds = state => state.chats.myIds;
+export const getAllIds = state => state.chats.allIds;
 export const getByIds = (state, idList) => idList.map(id => state.chats.byIds[id]);
 
-export const getChatId = (chat) => chat && chat._id;
-export const getChatName = (chat) => chat && chat.title;
-export const getChatMembers = (chat) => chat && chat.members;
-export const getChatMessages = (chat) => chat && chat.messages;
+export const getChatId = chat => chat && chat._id;
+export const getChatName = chat => chat && chat.title;
+export const getChatMembers = chat => chat && chat.members;
+export const getChatMessages = chat => chat && chat.messages;
 
 export const isChatCreator = (state, userId, chatId) => {
   try {
@@ -105,15 +105,13 @@ export const isChatMember = (state, userId, chatId) => {
     return false;
   }
 };
-export const isChatMemberOrCreator = (state, userId, chatId) => {
-  return isChatCreator(state, userId, chatId) || isChatMember(state, userId, chatId);
-};
+export const isChatMemberOrCreator = (state, userId, chatId) => isChatCreator(state, userId, chatId) || isChatMember(state, userId, chatId);
 
 export const chatsReducer = combineReducers({
   activeId,
   allIds,
   myIds,
-  byIds
+  byIds,
 });
 
 export default chatsReducer;

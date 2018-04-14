@@ -4,53 +4,53 @@ import {
   RECEIVE_DELETE_CHAT,
   RECEIVE_MESSAGE, RECEIVE_NEW_CHAT, SEND_MESSAGE,
   SOCKET_CONNECTION_FAILURE, SOCKET_CONNECTION_MISSING, SOCKET_CONNECTION_REQUEST,
-  SOCKET_CONNECTION_SUCCESS, UNMOUNT_CHAT
-} from "constants/sockets";
-import {getToken} from "reducers/auth";
-import {getActiveChatId, getChatId} from "reducers/chats";
-import {unsetActiveChat} from "actions/chats";
-import {origin} from "utils/callApi";
-import {isSocketsFetching} from "reducers/services";
+  SOCKET_CONNECTION_SUCCESS, UNMOUNT_CHAT,
+} from 'constants/sockets';
+import { getToken } from 'reducers/auth';
+import { getActiveChatId, getChatId } from 'reducers/chats';
+import { unsetActiveChat } from 'actions/chats';
+import { origin } from 'utils/callApi';
+import { isSocketsFetching } from 'reducers/services';
 
 let socket = null;
 
 export function missingSocketConnection() {
-  return {type: SOCKET_CONNECTION_MISSING, payload: new Error('Missing socket connection!')};
+  return { type: SOCKET_CONNECTION_MISSING, payload: new Error('Missing socket connection!') };
 }
 
 export function socketsConnect() {
   return function (dispatch, getState) {
     if (isSocketsFetching(getState())) return Promise.resolve();
 
-    dispatch({type: SOCKET_CONNECTION_REQUEST});
+    dispatch({ type: SOCKET_CONNECTION_REQUEST });
 
     const token = getToken(getState());
     socket = new SocketClient(`ws://${origin}`, {
-      query: {token}
+      query: { token },
     });
 
-    socket.on('connect', () => dispatch({type: SOCKET_CONNECTION_SUCCESS}));
+    socket.on('connect', () => dispatch({ type: SOCKET_CONNECTION_SUCCESS }));
 
     socket.on(
       'error',
-      (err) => dispatch({type: SOCKET_CONNECTION_FAILURE, payload: new Error(`Connection ${err}`)})
+      err => dispatch({ type: SOCKET_CONNECTION_FAILURE, payload: new Error(`Connection ${err}`) }),
     );
     socket.on(
       'connection_error',
-      () => dispatch({type: SOCKET_CONNECTION_FAILURE, payload: new Error('We have lost connection')})
+      () => dispatch({ type: SOCKET_CONNECTION_FAILURE, payload: new Error('We have lost connection') }),
     );
 
-    socket.on('new-message', (message) => dispatch({type: RECEIVE_MESSAGE, payload: message}));
-    socket.on('new-chat', ({chat}) => dispatch({type: RECEIVE_NEW_CHAT, payload: chat}));
-    socket.on('delete-chat', ({chat}) => {
-      dispatch({type: RECEIVE_DELETE_CHAT, payload: chat});
+    socket.on('new-message', message => dispatch({ type: RECEIVE_MESSAGE, payload: message }));
+    socket.on('new-chat', ({ chat }) => dispatch({ type: RECEIVE_NEW_CHAT, payload: chat }));
+    socket.on('delete-chat', ({ chat }) => {
+      dispatch({ type: RECEIVE_DELETE_CHAT, payload: chat });
 
       const activeChatId = getActiveChatId(getState());
       if (activeChatId === getChatId(chat)) {
         dispatch(unsetActiveChat());
       }
     });
-  }
+  };
 }
 
 export function sendMessage(content) {
@@ -59,13 +59,13 @@ export function sendMessage(content) {
       return dispatch(missingSocketConnection());
     }
 
-    const message = {content, chatId: getActiveChatId(getState())};
+    const message = { content, chatId: getActiveChatId(getState()) };
     socket.emit(
       'send-message',
       message,
-      () => dispatch({type: SEND_MESSAGE, payload: message})
+      () => dispatch({ type: SEND_MESSAGE, payload: message }),
     );
-  }
+  };
 }
 
 export function mountChat(chatId) {
@@ -75,8 +75,8 @@ export function mountChat(chatId) {
     }
 
     socket.emit('mount-chat', chatId);
-    dispatch({type: MOUNT_CHAT, payload: {chatId}});
-  }
+    dispatch({ type: MOUNT_CHAT, payload: { chatId } });
+  };
 }
 
 export function unmountChat(chatId) {
@@ -86,6 +86,6 @@ export function unmountChat(chatId) {
     }
 
     socket.emit('unmount-chat', chatId);
-    dispatch({type: UNMOUNT_CHAT, payload: {chatId}})
-  }
+    dispatch({ type: UNMOUNT_CHAT, payload: { chatId } });
+  };
 }

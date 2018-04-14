@@ -14,13 +14,13 @@ export default function auth(state = initialState, action) {
       return {
         ...state,
         user: action.payload.user,
-        token: action.payload.token
+        token: action.payload.token,
       };
 
     case types.RECEIVE_AUTH_SUCCESS:
       return {
         ...state,
-        user: action.payload.user
+        user: action.payload.user,
       };
 
     case types.RECEIVE_AUTH_FAILURE:
@@ -30,7 +30,7 @@ export default function auth(state = initialState, action) {
       return {
         ...state,
         user: null,
-        token: ''
+        token: '',
       };
     case types.LOGOUT_REQUEST:
       return state;
@@ -39,11 +39,11 @@ export default function auth(state = initialState, action) {
   }
 }
 
-export const isAuthenticated = (state) => !!getToken(state);
-export const getCurrentUser = (state) => state.auth.user;
-export const getToken = (state) => state.auth.token;
+export const isAuthenticated = state => !!getToken(state);
+export const getCurrentUser = state => state.auth.user;
+export const getToken = state => state.auth.token;
 
-export const getUserId = (user) => user._id;
-export const getUsername = (user) => user.username;
-export const getUserFirstName = (user) => user.firstName;
-export const getUserLastName = (user) => user.lastName;
+export const getUserId = user => user._id;
+export const getUsername = user => user.username;
+export const getUserFirstName = user => user.firstName;
+export const getUserLastName = user => user.lastName;

@@ -1,12 +1,12 @@
-import 'typeface-roboto';
-import 'index.css';
+import 'typeface-roboto/index.css';
+import './index.css';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from 'components/App';
 import registerServiceWorker from 'registerServiceWorker';
-import configureStore from "store";
-import {Provider} from "react-redux";
+import configureStore from 'store';
+import {Provider} from 'react-redux';
 
 registerServiceWorker();
 
@@ -19,10 +19,10 @@ if (module.hot) {
 }
 
 function renderApp() {
-
   ReactDOM.render(
     <Provider store={store}>
       <App/>
     </Provider>
-    , rootEl);
+    , rootEl,
+  );
 }
