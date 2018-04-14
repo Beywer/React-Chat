@@ -39,18 +39,20 @@ class MessageInput extends React.Component {
   };
 
   render() {
-    const {classes, isChatMemberOrCreator, joinChat} = this.props;
+    const {classes, isChatMemberOrCreator, joinChat, disabled} = this.props;
     const {message} = this.state;
     return (
       <form className={classes.messageInputWrapper} onSubmit={this.handleSubmit}>
         <Paper className={classes.messageInput} elevation={6}>
           {isChatMemberOrCreator && <Input fullWidth
+                                           disabled={disabled}
                                            type="text"
                                            placeholder="Type your message…"
                                            value={message}
                                            onChange={this.handleMessageChange}/>
           }
-          {!isChatMemberOrCreator && <Button variant="raised" color="primary" fullWidth={true} onClick={joinChat}>
+          {!isChatMemberOrCreator &&
+          <Button disabled={disabled} variant="raised" color="primary" fullWidth={true} onClick={joinChat}>
             JOIN
           </Button>
           }

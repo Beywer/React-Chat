@@ -46,13 +46,14 @@ class UserIcon extends React.Component {
 
   render() {
     const {userMenuAnchor, isUserProfileOpen} = this.state;
-    const {classes, currentUser} = this.props;
+    const {classes, currentUser, disabled} = this.props;
 
     return (
       <React.Fragment>
         <IconButton
           className={classes.menuButton}
           onClick={this.handleUserMenuOpen}
+          disabled={disabled}
         >
           <MUIUserIcon/>
         </IconButton>

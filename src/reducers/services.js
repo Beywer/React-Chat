@@ -14,7 +14,10 @@ import {
   FETCH_MY_CHATS_SUCCESS, JOIN_CHAT_FAILURE, JOIN_CHAT_REQUEST, JOIN_CHAT_SUCCESS, LEAVE_CHAT_FAILURE,
   LEAVE_CHAT_REQUEST, LEAVE_CHAT_SUCCESS
 } from "constants/chats";
-import {SOCKET_CONNECTION_FAILURE, SOCKET_CONNECTION_REQUEST, SOCKET_CONNECTION_SUCCESS} from "constants/sockets";
+import {
+  SOCKET_CONNECTION_FAILURE, SOCKET_CONNECTION_MISSING, SOCKET_CONNECTION_REQUEST,
+  SOCKET_CONNECTION_SUCCESS
+} from "constants/sockets";
 
 const initialState = {
   isFetching: {
@@ -35,7 +38,8 @@ const initialState = {
   errors: {
     auth: null,
     chat: null
-  }
+  },
+  isConnected: false
 };
 
 export function isFetching(state = initialState.isFetching, action = {}) {
@@ -164,6 +168,20 @@ export function errors(state = initialState.errors, action = {}) {
   }
 }
 
+export function isConnected(state = initialState.isConnected, action = {}) {
+  switch (action.type) {
+    case SOCKET_CONNECTION_MISSING:
+    case SOCKET_CONNECTION_FAILURE:
+      return false;
+
+    case SOCKET_CONNECTION_SUCCESS:
+      return true;
+
+    default:
+      return state;
+  }
+}
+
 export const isSignUpFetching = (state) => state.services.isFetching.signUp;
 export const isLogInFetching = (state) => state.services.isFetching.logIn;
 export const isLogOutFetching = (state) => state.services.isFetching.logOut;
@@ -181,6 +199,8 @@ export const isEditUserFetching = (state) => state.services.isFetching.editUser;
 export const getAuthErrorMessage = (state) => state.services.errors.auth;
 export const getChatErrorMessage = (state) => state.services.errors.chat;
 
+export const getIsConnected = (state) => state.services.isConnected;
+
 export default combineReducers({
-  isFetching, errors
+  isFetching, errors, isConnected
 })

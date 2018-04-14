@@ -15,7 +15,7 @@ import {isSocketsFetching} from "reducers/services";
 let socket = null;
 
 export function missingSocketConnection() {
-  return {type: SOCKET_CONNECTION_MISSING};
+  return {type: SOCKET_CONNECTION_MISSING, payload: new Error('Missing socket connection!')};
 }
 
 export function socketsConnect() {
@@ -31,8 +31,14 @@ export function socketsConnect() {
 
     socket.on('connect', () => dispatch({type: SOCKET_CONNECTION_SUCCESS}));
 
-    socket.on('error', () => dispatch({type: SOCKET_CONNECTION_FAILURE}));
-    socket.on('connection_error', () => dispatch({type: SOCKET_CONNECTION_FAILURE}));
+    socket.on(
+      'error',
+      (err) => dispatch({type: SOCKET_CONNECTION_FAILURE, payload: new Error(`Connection ${err}`)})
+    );
+    socket.on(
+      'connection_error',
+      () => dispatch({type: SOCKET_CONNECTION_FAILURE, payload: new Error('We have lost connection')})
+    );
 
     socket.on('new-message', (message) => dispatch({type: RECEIVE_MESSAGE, payload: message}));
     socket.on('new-chat', ({chat}) => dispatch({type: RECEIVE_NEW_CHAT, payload: chat}));

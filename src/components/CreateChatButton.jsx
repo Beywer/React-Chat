@@ -44,11 +44,12 @@ class CreateChatButton extends React.Component {
   };
 
   render() {
-    const {className, classes} = this.props;
+    const {className, classes, disabled} = this.props;
     const {newChatName} = this.state;
     return (
       <React.Fragment>
         <Button
+          disabled={disabled}
           variant="fab"
           color="primary"
           className={className}

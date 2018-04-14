@@ -16,8 +16,8 @@ const styles = (theme) => ({
   }
 });
 
-const ChatItem = ({classes, title, createdAt, onClick, selected}) => (
-  <ListItem button onClick={onClick} className={selected ? classes.selected : ''}>
+const ChatItem = ({classes, title, createdAt, onClick, selected, disabled}) => (
+  <ListItem button onClick={onClick} className={selected ? classes.selected : ''} disabled={disabled}>
     <Avatar colorFrom={title}>{title}</Avatar>
     <div className={classes.chatInfo}>
       <ListItemText primary={title}/>

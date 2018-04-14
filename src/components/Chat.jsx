@@ -29,7 +29,7 @@ const styles = (theme) => ({
   }
 });
 
-const Chat = ({classes, messages, isChatMemberOrCreator, currentUserId, activeChatId, joinChat, sendMessage}) => (
+const Chat = ({classes, messages, isChatMemberOrCreator, currentUserId, activeChatId, joinChat, sendMessage, isConnected}) => (
   <main className={classes.chatLayout}>
     {/* Приветсвенное сообщение, если не выбран чат */}
     {!activeChatId && <div className={classes.greetContainer}>
@@ -48,7 +48,8 @@ const Chat = ({classes, messages, isChatMemberOrCreator, currentUserId, activeCh
 
 
     {activeChatId && <MessageList messages={messages} currentUserId={currentUserId}/>}
-    {activeChatId && <MessageInput isChatMemberOrCreator={isChatMemberOrCreator}
+    {activeChatId && <MessageInput disabled={!isConnected}
+                                   isChatMemberOrCreator={isChatMemberOrCreator}
                                    joinChat={() => joinChat(activeChatId)}
                                    onMessageInput={sendMessage}/>}
   </main>

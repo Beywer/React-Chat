@@ -64,6 +64,7 @@ class ChatPage extends React.Component {
       currentUser,
       updateUserProfile,
       error,
+      isConnected,
     } = this.props;
     const chats = this.state.showOnlyMyChats ? myChats : allChats;
 
@@ -78,6 +79,7 @@ class ChatPage extends React.Component {
           onChatDelete={() => deleteChat(activeChatId)}
           currentUser={currentUser}
           updateUserProfile={updateUserProfile}
+          isConnected={isConnected}
         />
         <Sidebar
           chats={chats}
@@ -86,6 +88,7 @@ class ChatPage extends React.Component {
           activeChatId={activeChatId}
           onChatCreate={createChat}
           onChatSelect={setActiveChat}
+          isConnected={isConnected}
         />
         <Chat
           messages={messages}
@@ -94,6 +97,7 @@ class ChatPage extends React.Component {
           joinChat={joinChat}
           sendMessage={sendMessage}
           currentUserId={currentUserId}
+          isConnected={isConnected}
         />
 
         <ErrorMessage error={error}/>

@@ -33,7 +33,9 @@ class Sidebar extends React.Component {
   handleFilterStringChange = (e) => this.setState({filterString: e.target.value});
 
   render() {
-    const {classes, chats, onMyChatsSelect, onAllChatsSelect, activeChatId, onChatSelect, onChatCreate} = this.props;
+    const {
+      classes, chats, onMyChatsSelect, onAllChatsSelect, activeChatId, onChatSelect, onChatCreate, isConnected
+    } = this.props;
     const {filterString} = this.state;
 
     const filteredChats = filterString ? chats.filter(chat => getChatName(chat).indexOf(filterString) !== -1) : chats;
@@ -47,12 +49,14 @@ class Sidebar extends React.Component {
         />
         <Divider/>
         <ChatsList
+          disabled={!isConnected}
           chats={filteredChats}
           activeChatId={activeChatId}
           onChatSelect={onChatSelect}
         />
 
         <CreateChatButton
+          disabled={!isConnected}
           className={classes.newChatButton}
           onChatCreate={onChatCreate}
         />

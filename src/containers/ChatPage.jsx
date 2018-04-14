@@ -7,7 +7,7 @@ import * as fromMessages from 'reducers/messages';
 import {createChat, fetchAllChats, fetchMyChats, setActiveChat, deleteChat, joinChat, leaveChat} from 'actions/chats';
 import {logout, updateUserProfile} from "actions/auth";
 import {sendMessage, mountChat, unmountChat, socketsConnect} from "actions/sockets";
-import {getChatErrorMessage} from "reducers/services";
+import {getChatErrorMessage, getIsConnected} from "reducers/services";
 
 const mapStateToProps = (state) => {
   const activeChatId = fromChats.getActiveChatId(state);
@@ -27,6 +27,7 @@ const mapStateToProps = (state) => {
     currentUserId,
     currentUser,
     error: getChatErrorMessage(state),
+    isConnected: getIsConnected(state)
   }
 };
 

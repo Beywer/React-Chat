@@ -41,7 +41,9 @@ class ChatHeader extends React.Component {
 
 
   render() {
-    const {classes, chatName, isChatCreator, isChatMember, onLogout, currentUser, updateUserProfile} = this.props;
+    const {
+      classes, chatName, isChatCreator, isChatMember, onLogout, currentUser, updateUserProfile, isConnected
+    } = this.props;
     const {menuButtonAnchor} = this.state;
 
     return (
@@ -56,6 +58,7 @@ class ChatHeader extends React.Component {
             <IconButton
               className={classes.menuButton}
               onClick={this.handleMenuOpen}
+              disabled={!isConnected}
             >
               <MoreVertIcon/>
             </IconButton>
@@ -76,6 +79,7 @@ class ChatHeader extends React.Component {
             onLogout={onLogout}
             currentUser={currentUser}
             onUserProfileChange={updateUserProfile}
+            disabled={!isConnected}
           />
         </Toolbar>
       </AppBar>
