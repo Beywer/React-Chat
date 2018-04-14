@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "cross-env PORT=3100 NODE_PATH=src react-scripts start",
-    "build": "cross-env NODE_PATH=src react-scripts build",
-    "test": "cross-env NODE_PATH=src react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "start": "cross-env PORT=3100 NODE_PATH=src react-app-rewired start",
+    "build": "cross-env NODE_PATH=src react-app-rewired build",
+    "test": "cross-env NODE_PATH=src react-app-rewired test --env=jsdom",
+    "eject": "react-app-rewired eject"
   },
   "dependencies": {
     "classnames": "^2.2.5",
@@ -24,7 +24,10 @@
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.2.0",
     "socket.io-client": "^2.0.4",
-    "typeface-roboto": "0.0.54"
+    "typeface-roboto": "0.0.54",
+    "react-app-rewire-polyfills": "^0.2.0",
+    "react-app-rewire-eslint": "^0.2.3",
+    "react-app-rewired": "^1.5.0"
   },
   "devDependencies": {
     "cross-env": "^5.1.3"
